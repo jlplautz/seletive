@@ -26,6 +26,9 @@ class Empresa(models.Model):
     def __str__(self) -> str:
         return self.nome
 
+    def qtd_vagas(self):
+        return Vagas.objects.filter(empresa__id=self.id).count()
+
 
 class Vagas(models.Model):
     choices_experiencia = (
@@ -42,12 +45,12 @@ class Vagas(models.Model):
         ('F', 'Finalizado')
     )
 
-
     # SET_NULL possibilita deletar registro mesmo existindo relacionamento entre registros # noqa
     empresa = models.ForeignKey(Empresa, null=True, on_delete=models.SET_NULL)
     titulo = models.CharField(max_length=30)
     nivel_experiencia = models.CharField(max_length=2, choices=choices_experiencia)
     data_final = models.DateField()
+    email = models.EmailField(null=True)
     status = models.CharField(max_length=30, choices=choices_status)
     tecnologias_dominadas = models.ManyToManyField(Tecnologias)
     tecnologias_estudar = models.ManyToManyField(Tecnologias, related_name='estudar')
